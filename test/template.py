@@ -1,40 +1,17 @@
 # column 首字母小写
-# mcolumn 首字母大写
-# classname 为tablename，首字母大写
-dbmap = {
-    "varchar":"String",
-    "char":"String",
-    "blob":"byte[]",
-    "text":"String",
-    "integer":"Long",
-    "tinyint":"Integer",
-    "smallint":"Integer",
-    "mediumint":"Integer",
-    "bit":"Boolean",
-    "bigint":"BigInteger",
-    "float":"Float",
-    "double":"Double",
-    "decimal":"BigDecimal",
-    "boolean":"Integer",
-    "id":"Long",
-    "date":"Date",
-    "time":"Time",
-    "datetime":"Timestamp",
-    "timestamp":"Timestamp",
-    "year":"Date"
-}
-
+# methond 首字母大写
+# Class 为tablename，首字母大写
 propertyTemplate = Template("""
-$comment    
-private $type $column
+$comment
+private $attribute $column
 """)
 
 methodTemplate = Template("""
-public void set$mcolumn($type $column) {
+public void set$methond($attribute $column) {
     this.$column = $column;
 }
 
-public $type get$mcolumn {
+public $attribute get$methond {
     return $column;
 }
 """)
@@ -48,20 +25,20 @@ import java.lang.*;
 *
 *   Created by CodeBuilder@$Datetime
 */
-public class $ClassName
-{ 
+public class $Class
+{
     $Property
 }
 """)
 
 xmlTemplate = Template("""
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="$classname">
-    <typeAlias alias="$classname" type="" /> 
-    <select id="get$classname" resultType="$classname">
+<mapper namespace="$methond">
+    <typeAlias alias="$methond" type="" />
+    <select id="get$methond" resultType="$methond">
     </select>
 </mapper>
 """)

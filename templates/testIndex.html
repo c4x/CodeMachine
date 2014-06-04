@@ -1,0 +1,38 @@
+<html>
+<head>
+<script language="javascript" type="text/javascript" src="/static/jquery.js"></script>
+<script type="text/javascript">
+$(function(){
+    var websocket;
+    $("#sub").click(function(){
+        var host = 'ws://localhost:8080/test/socket';
+        websocket = new WebSocket(host);
+        websocket.onopen = function(evt) {
+            websocket.send($("#uuid").val());
+        }
+        websocket.onmessage = function(evt) {
+            alert(evt.data)
+        };
+        websocket.onerror = function (evt) { };
+        // websocket.send($("#uuid").val());
+        $("#form1").submit();
+        return false;
+    });
+     $("#but").click(function(){
+        websocket.close();
+     });
+});
+</script>
+</head>
+<body>
+<form action="/test" method="post" id="form1" target="hidden_frame">
+地&nbsp;&nbsp;&nbsp;&nbsp;址:
+<input type="hidden" value="{{uuid}}" id="uuid" name="uuid">
+<input type="text" name="test"/>
+<input type="button" id="sub" value="提交" />
+</form>
+<iframe name='hidden_frame' id="hidden_frame" style="display:none"></iframe> 
+<div id="msg"></div>
+<input type="button" id="but" value="close" />
+</body>
+</html>

@@ -1,0 +1,47 @@
+<html>
+<head>
+<script language="javascript" type="text/javascript" src="/static/jquery.js"></script>
+<script type="text/javascript">
+$(function(){
+    var websocket;
+    $("#sub").click(function(){
+        var host = 'ws://localhost:8080/tables/generate/socket';
+        websocket = new WebSocket(host);
+        websocket.onopen = function(evt) {
+            websocket.send($("#uuid").val());
+        }
+        websocket.onmessage = function(evt) {
+            if(evt.data == 'close'){
+                websocket.close();
+            }else{
+                $("#msg").append(evt.data+"<br/>");
+            }
+        };
+        websocket.onerror = function (evt) { };
+        $("#tablesForm").submit();
+        return false;
+    });
+});
+</script>
+</head>
+<body>
+<form action="/tables/generate" method="post" id="tablesForm" target="hidden_frame">
+<input type="hidden" value="{{uuid}}" id="uuid" name="uuid">
+地&nbsp;&nbsp;&nbsp;&nbsp;址:{{ co["host"] }}
+<input type="hidden" value="{{co['host']}}" name="host"/>
+用户名:{{co["user"]}}
+<input type="hidden" value="{{co['user']}}" name="user"/>
+<input type="hidden" value="{{co['password']}}" name="password"/>
+数据库:{{co["db"]}}
+<input type="hidden" value="{{co['db']}}" name="db"/>
+<br/>
+<input type="checkbox"/>全选<br/>
+{% for table in tables %}
+    <input type="checkbox" name="tables" value="{{ table[0] }}">{{ table[0] }}</input><br/>
+{% end %}
+<input type="button" id="sub" value="生成" />
+</form>
+<iframe name='hidden_frame' id="hidden_frame" style="display:none"></iframe> 
+<div id="msg"></div>
+</body>
+</html>

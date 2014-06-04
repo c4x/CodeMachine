@@ -1,5 +1,3 @@
-import os
-filePath = os.getcwd() + "/" +"test.java"
-if os.path.exists(filePath):
-    os.remove(filePath)
-print(filePath)
+a = {}
+a["1"] = "test"
+print(a)

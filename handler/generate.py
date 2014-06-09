@@ -1,6 +1,6 @@
 import tornado.web
 import tornado.websocket
-import util.generatePojo as pojo
+import util.generatePojo as generatePojo
 
 def send_message(message,uuid,handlers):
     if uuid in handlers:
@@ -19,7 +19,7 @@ class GenerateHandler(tornado.web.RequestHandler):
         tables = self.get_arguments("tables")
         uuid = self.get_argument('uuid')
         for table in tables:
-            pojo.generate(table, user, password, host, db)
+            generatePojo.generate(table, user, password, host, db)
             send_message("finish table:{}".format(table),uuid,self.application.socketDict.handlers)
         send_message("close",uuid,self.application.socketDict.handlers)
         self.finish()

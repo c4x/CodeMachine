@@ -1,66 +1,8 @@
 import mysql.connector
 import string
 from string import Template
-import os
-import time
-
-dbmap = {
-    "varchar":"String",
-    "char":"String",
-    "blob":"byte[]",
-    "text":"String",
-    "integer":"Long",
-    "tinyint":"Integer",
-    "smallint":"Integer",
-    "mediumint":"Integer",
-    "bit":"Boolean",
-    "bigint":"BigInteger",
-    "float":"Float",
-    "double":"Double",
-    "decimal":"BigDecimal",
-    "boolean":"Integer",
-    "id":"Long",
-    "date":"Date",
-    "time":"Time",
-    "datetime":"Timestamp",
-    "timestamp":"Timestamp",
-    "year":"Date",
-    "enum":"String",
-    "int":"Long",
-    "set":"String",
-    "longblob":"byte[]",
-    "mediumtext":"String"
-}
-
-propertyTemplate = Template("""
-$comment
-private $attribute $column;
-""")
-
-methodTemplate = Template("""
-public void set$methond($attribute $column) {
-    this.$column = $column;
-}
-
-public $attribute get$methond {
-    return $column;
-}
-""")
-
-pojoTemplate = Template("""
-import java.lang.*;
-
-/*
-*
-*   Author:
-*
-*   Created by CodeBuilder@$Datetime
-*/
-public class $Class
-{
-    $Property
-}
-""")
+import time,os
+import pojoTemplate.java as java
 
 def resetMethond(column):
     methonds = {}
@@ -75,8 +17,8 @@ def resetMethond(column):
     return methonds
 
 def saveFile(dirPath, filename, buf):
-    filePath = "/Users/cfour/workspace/codespace/CodeMachine/" + dirPath + "/" + filename
-    dirPath = "/Users/cfour/workspace/codespace/CodeMachine/" + dirPath
+    filePath = "" + dirPath + "/" + filename
+    dirPath = "" + dirPath
     if not os.path.exists(dirPath):
         os.mkdir(dirPath)
     else:
@@ -97,15 +39,15 @@ def generate(Class, user, password, host, db):
     pro,mth = '',''
     for column in columns:
         comment = column[2]
-        attribute = dbmap[column[1]]
+        attribute = java.dbmap[column[1]]
         methonds = resetMethond(column[0])
         if not len(comment)==0:
             comment = "// {}".format(comment)
-        pro += propertyTemplate.substitute(comment = comment, 
+        pro += java.propertyTemplate.substitute(comment = comment, 
             attribute = attribute , column = methonds["column"])
-        mth += methodTemplate.substitute(methond = methonds["methond"], 
+        mth += java.methodTemplate.substitute(methond = methonds["methond"], 
             attribute = attribute, column = methonds["column"])
         propty = pro + mth
-        pojo = pojoTemplate.substitute(Class = Class, Property = propty, Datetime = date)
+        pojo = java.pojoTemplate.substitute(Class = Class, Property = propty, Datetime = date)
         saveFile(db + date, "{}.java".format(Class), pojo)
     pass

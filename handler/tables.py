@@ -1,7 +1,6 @@
 import tornado.web
 import mysql.connector
-import json
-import random
+import json,random,uuid
 
 
 class TablesHandler(tornado.web.RequestHandler):
@@ -17,7 +16,7 @@ class TablesHandler(tornado.web.RequestHandler):
         try:
             cursor.execute("show tables")
             tables = cursor.fetchall()
-            uuid = self.GenCRSF()
+            uuid = self.GenUUID()
             self.render("tables.html", co = co, tables = tables, uuid = uuid)
         except mysql.connector.Error as e:
             self.render("tables.html", co = co, message = "get tables error")
@@ -26,7 +25,5 @@ class TablesHandler(tornado.web.RequestHandler):
             cursor.close()
             connector.close()
 
-    #使用时间戳生成，得到唯一
-    def GenCRSF(length = 5):
-        chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-        return ''.join(random.sample(chars, 4))
+    def GenUUID():
+        return uuid.uuid1()
